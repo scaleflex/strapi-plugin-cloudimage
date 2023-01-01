@@ -5,7 +5,7 @@
  */
 
 import React, {memo, useState, useEffect} from 'react';
-import { Stack, Box, Typography, Field, FieldLabel, FieldInput, Button, Alert } from '@strapi/design-system';
+import { Stack, Box, Typography, Field, FieldLabel, FieldInput, Button, Alert, Radio, RadioGroup } from '@strapi/design-system';
 import {request} from "@strapi/helper-plugin";
 import pluginId from '../../pluginId';
 
@@ -14,6 +14,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [domain, setDomain] = useState('');
   const [isV7, setIsV7] = useState(false);
+  const [isV7CheckSuccessful, setIsV7CheckSuccessful] = useState(true);
+  const [manualV7, setManualV7] = useState(false);
   const [disabledAllButtons, setDisabledAllButtons] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -36,7 +38,15 @@ const HomePage = () => {
   const saveConfiguration = async () => {
     if (!domain)
     {
-      return; //@Todo: better message here, ie required field
+      setError(true);
+      setSuccess(false);
+      setDisabledAllButtons(false);
+
+      return;
+    }
+    else
+    {
+      setError(false);
     }
 
     setDisabledAllButtons(true);
@@ -55,12 +65,29 @@ const HomePage = () => {
 
     // Check whether v7 or not
     let v7Check = await request(`/${pluginId}/is-v7?domain=${tokenOrDomain}`, {method: 'GET'});
-    setIsV7(v7Check);
+
+    if (!v7Check.domainExists)
+    {
+      setError(true);
+      setSuccess(false);
+      setDisabledAllButtons(false);
+
+      return;
+    }
+    else
+    {
+      setError(false);
+    }
+
+    setIsV7CheckSuccessful(v7Check.isSuccess);
+
+    let isV7Overall = v7Check.isSuccess ? v7Check.isV7 : manualV7;
+    setIsV7(isV7Overall);
 
     // POST to backend to set config
     let config = {
       domain: tokenOrDomain,
-      isV7: v7Check
+      isV7: isV7Overall
     }
 
     let updatedConfigs = await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
@@ -73,19 +100,24 @@ const HomePage = () => {
   return (
     <>
       <Stack spacing={4} padding={3}>
-        {success && isV7 && (
+        {success && isV7CheckSuccessful && isV7 && (
           <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'}>
             Configuration updated. Your domain is of Cloudimage version 7.
           </Alert>
         )}
-        {success && !isV7 && (
+        {success && isV7CheckSuccessful && !isV7 && (
           <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'}>
             Configuration updated. Your domain is not of Cloudimage version 7.
           </Alert>
         )}
+        {success && !isV7CheckSuccessful && (
+          <Alert title="Failed" onClose={() => setError(false)} closeLabel="Close alert" variant={'danger'}>
+            Cannot auto-determine whether it's Cloudimage version 7 or not. Please mannually set Cloudimage version.
+          </Alert>
+        )}
         {error && (
           <Alert title="Failed" onClose={() => setError(false)} closeLabel="Close alert" variant={'danger'}>
-            Please check your configuration setting
+            Please check your configuration inputs. Ensure you entered valid inputs for all required fields.
           </Alert>
         )}
         <Box paddingLeft={8} paddingTop={5} paddingRight={8}>
@@ -93,12 +125,21 @@ const HomePage = () => {
         </Box>
         <Field name="domain">
           <Stack spacing={1}>
-            <FieldLabel>Token or Domain</FieldLabel>
+            <FieldLabel>Token or Domain *</FieldLabel>
             <FieldInput type="text" placeholder="Token/Domain" value={domain} onChange={(e) => {
               setDomain(e.target.value)
             }}/>
           </Stack>
         </Field>
+        {!isV7CheckSuccessful && (
+          <Stack spacing={1}>
+            <FieldLabel>Is Cloudimage version 7 ?</FieldLabel>
+            <RadioGroup onChange={e => setManualV7(e.target.value)} value={manualV7} name="manualV7">
+              <Radio value="true">Version 7</Radio>
+              <Radio value="false">Not version 7</Radio>
+            </RadioGroup>
+          </Stack>
+        )}
         <Box width={200}>
           <Button disabled={disabledAllButtons} onClick={() => saveConfiguration()}>Save configuration</Button>
         </Box>
