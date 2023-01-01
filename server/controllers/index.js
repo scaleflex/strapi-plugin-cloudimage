@@ -1,7 +1,7 @@
 'use strict';
 
-const myController = require('./my-controller');
+const scaleflexCloudimage = require('./scaleflex-cloudimage');
 
 module.exports = {
-  myController,
+  scaleflexCloudimage,
 };
