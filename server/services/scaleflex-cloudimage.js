@@ -76,4 +76,89 @@ module.exports = ({ strapi }) => ({
       return {isSuccess: false, domainExists: true};
     }
   },
+  async countUpdate(ctx) {
+    let pluginStore = this.getPluginStore();
+    let pluginConfig = await pluginStore.get({key: 'options'});
+    let domain = pluginConfig.domain;
+
+    let media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: {category: true},
+      filters: { // https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/entity-service/filter.html#and
+        $and: [
+          {
+            url: { $notContains: domain, },
+          },
+          {
+            mime: { $contains: 'image', },
+          },
+          {
+            provider: { $notContains: 'filerobot', },
+          },
+        ],
+      },
+    });
+
+    return media.length;
+  },
+  async updateMedia(ctx) {
+    let baseUrl = strapi.config.get('server.url');
+    let pluginStore = this.getPluginStore();
+    let pluginConfig = await pluginStore.get({key: 'options'});
+    let domain = pluginConfig.domain;
+    let isV7 = pluginConfig.isV7;
+
+    let media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: {category: true},
+      filters: {
+        $and: [
+          {
+            url: { $notContains: domain, },
+          },
+          {
+            mime: { $contains: 'image', },
+          },
+          {
+            provider: { $notContains: 'filerobot', },
+          },
+        ],
+      },
+    });
+
+    await Promise.all(media.map(async (item, index) => {
+      let prepUrl = '';
+
+      if (/^https?:\/\//.test(item.url))
+      {
+        prepUrl = item.url.replace(/^https?:\/\//, '');
+      }
+      else
+      {
+        prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
+      }
+
+      let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
+
+      try 
+      {
+        console.log(index);
+
+        let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+          data: { 
+            url: ciUrl, 
+            formats: null 
+          },
+        });
+
+        if (index===2) {throw new Error('Oops');}
+      }
+      catch (e)
+      {
+        console.dir(e);
+
+        return media;
+      }
+    }));
+
+    return media;
+  },
 });
