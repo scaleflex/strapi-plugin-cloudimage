@@ -138,12 +138,25 @@ module.exports = ({ strapi }) => ({
 
       let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
 
-      let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
-        data: { 
-          url: ciUrl, 
-          formats: null 
-        },
-      });//@Todo what about errors?
+      try 
+      {
+        console.log(index);
+
+        let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+          data: { 
+            url: ciUrl, 
+            formats: null 
+          },
+        });
+
+        if (index===2) {throw new Error('Oops');}
+      }
+      catch (e)
+      {
+        console.dir(e);
+
+        return media;
+      }
     }));
 
     return media;
