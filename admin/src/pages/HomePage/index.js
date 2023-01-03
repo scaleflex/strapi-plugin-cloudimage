@@ -120,7 +120,7 @@ const HomePage = () => {
     setDisplayUpdateResult(false);
     setDisabledAllButtons(true);
     let result = await request(`/${pluginId}/update-media`, {method: 'PUT'});
-    console.dir(result);
+    //console.dir(result);
     setDisplayUpdateResult(true);
     setDisabledAllButtons(false);
   }
