@@ -40,20 +40,20 @@ module.exports = ({ strapi }) => ({
 
     const config = await pluginStore.get({key: 'options'});
 
-    if (config.domain)
-    {
-      for (let index = 1; index < strapi.config.middlewares.length; index++)
-      {
-        let item = strapi.config.middlewares[index];
+    // if (config.domain)
+    // {
+    //   for (let index = 1; index < strapi.config.middlewares.length; index++)
+    //   {
+    //     let item = strapi.config.middlewares[index];
 
-        if (typeof item === 'object' && item.name === 'strapi::security' 
-          && !item.config.contentSecurityPolicy.directives['img-src'].includes(config.domain))
-        {
-          strapi.config.middlewares[index].config.contentSecurityPolicy.directives['img-src'].push(config.domain);
-          strapi.config.middlewares[index].config.contentSecurityPolicy.directives['media-src'].push(config.domain);
-        }
-      }
-    }
+    //     if (typeof item === 'object' && item.name === 'strapi::security' 
+    //       && !item.config.contentSecurityPolicy.directives['img-src'].includes(config.domain))
+    //     {
+    //       strapi.config.middlewares[index].config.contentSecurityPolicy.directives['img-src'].push(config.domain);
+    //       strapi.config.middlewares[index].config.contentSecurityPolicy.directives['media-src'].push(config.domain);
+    //     }
+    //   }
+    // }
 
     return config;
   },
@@ -139,38 +139,6 @@ module.exports = ({ strapi }) => ({
       },
     });
 
-    // await Promise.all(media.map(async (item, index) => {
-    //   let prepUrl = '';
-
-    //   if (/^https?:\/\//.test(item.url))
-    //   {
-    //     prepUrl = item.url.replace(/^https?:\/\//, '');
-    //   }
-    //   else
-    //   {
-    //     prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
-    //   }
-
-    //   let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
-
-    //   return await strapi.entityService.update('plugin::upload.file-delibrite-mistake', item.id, {
-    //     data: { 
-    //       url: ciUrl, 
-    //       formats: null 
-    //     },
-    //   }).catch(function(error) {
-    //     return JSON.stringify({error: error.message});
-    //   });
-    // }))
-    // .then(function(results) {
-    //   return JSON.stringify({success: true, results: results});
-    // })
-    // .catch(function(error) {
-    //   console.dir(error.message);
-
-    //   return JSON.stringify({success: false});
-    // });
-
     await Promise.all(media.map(async (item, index) => {
       let prepUrl = '';
 
@@ -185,13 +153,45 @@ module.exports = ({ strapi }) => ({
 
       let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
 
-      let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+      return await strapi.entityService.update('plugin::upload.file-delibrite-mistake', item.id, {
         data: { 
           url: ciUrl, 
           formats: null 
         },
+      }).catch(function(error) {
+        return JSON.stringify({error: error.message});
       });
-    }));
+    }))
+    .then(function(results) {
+      return JSON.stringify({success: true, results: results});
+    })
+    .catch(function(error) {
+      console.dir(error.message);
+
+      return JSON.stringify({success: false});
+    });
+
+    // await Promise.all(media.map(async (item, index) => {
+    //   let prepUrl = '';
+
+    //   if (/^https?:\/\//.test(item.url))
+    //   {
+    //     prepUrl = item.url.replace(/^https?:\/\//, '');
+    //   }
+    //   else
+    //   {
+    //     prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
+    //   }
+
+    //   let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
+
+    //   let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+    //     data: { 
+    //       url: ciUrl, 
+    //       formats: null 
+    //     },
+    //   });
+    // }));
 
     return media;
   },

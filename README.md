@@ -6,6 +6,28 @@
 
 ## Config
 
+
+`config/middlewares.js`
+
+Replace `'strapi::security',` with:
+
+```
+{
+  name: 'strapi::security',
+  config: {
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        'connect-src': ["'self'", 'https:'],
+        'img-src': ["'self'", 'data:', 'blob:', 'scaleflex.cloudimg.io', 'assets.scaleflex.com', '*.cloudimg.io'],
+        'media-src': ["'self'", 'data:', 'blob:', 'scaleflex.cloudimg.io', 'assets.scaleflex.com', '*.cloudimg.io'],
+        upgradeInsecureRequests: null,
+      },
+    },
+  },
+},
+```
+
 `config/server.js`
 
 Append `url: 'domain (including the http/https:// part)'`
