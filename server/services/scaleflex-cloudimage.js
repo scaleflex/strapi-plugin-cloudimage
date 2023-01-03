@@ -139,38 +139,7 @@ module.exports = ({ strapi }) => ({
       },
     });
 
-    // await Promise.all(media.map(async (item, index) => {
-    //   let prepUrl = '';
-
-    //   if (/^https?:\/\//.test(item.url))
-    //   {
-    //     prepUrl = item.url.replace(/^https?:\/\//, '');
-    //   }
-    //   else
-    //   {
-    //     prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
-    //   }
-
-    //   let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
-
-    //   return await strapi.entityService.update('plugin::upload.file-delibrite-mistake', item.id, {
-    //     data: { 
-    //       url: ciUrl, 
-    //       formats: null 
-    //     },
-    //   }).catch(function(error) {
-    //     return JSON.stringify({error: error.message});
-    //   });
-    // }))
-    // .then(function(results) {
-    //   return JSON.stringify({success: true, results: results});
-    // })
-    // .catch(function(error) {
-    //   console.dir(error.message);
-
-    //   return JSON.stringify({success: false});
-    // });
-
+    //@Todo: work on this
     await Promise.all(media.map(async (item, index) => {
       let prepUrl = '';
 
@@ -185,13 +154,47 @@ module.exports = ({ strapi }) => ({
 
       let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
 
-      let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+      return await strapi.entityService.update('plugin::upload.file-delibrite-mistake', item.id, {
         data: { 
           url: ciUrl, 
           formats: null 
         },
+      }).catch(function(error) {
+        return JSON.stringify({error: error.message});
       });
-    }));
+    }))
+    .then(function(results) {
+      return JSON.stringify({success: true, results: results});
+    })
+    .catch(function(error) {
+      console.dir(error.message);
+
+      return JSON.stringify({success: false});
+    });
+
+    // USE THIS AS REF
+    // and this https://stackoverflow.com/questions/30362733/handling-errors-in-promise-all/30378082#30378082
+    // await Promise.all(media.map(async (item, index) => {
+    //   let prepUrl = '';
+
+    //   if (/^https?:\/\//.test(item.url))
+    //   {
+    //     prepUrl = item.url.replace(/^https?:\/\//, '');
+    //   }
+    //   else
+    //   {
+    //     prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
+    //   }
+
+    //   let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
+
+    //   let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+    //     data: { 
+    //       url: ciUrl, 
+    //       formats: null 
+    //     },
+    //   });
+    // }));
 
     return media;
   },
