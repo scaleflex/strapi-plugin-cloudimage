@@ -139,39 +139,7 @@ module.exports = ({ strapi }) => ({
       },
     });
 
-    // await Promise.all(media.map(async (item, index) => {
-    //   let prepUrl = '';
-
-    //   if (/^https?:\/\//.test(item.url))
-    //   {
-    //     prepUrl = item.url.replace(/^https?:\/\//, '');
-    //   }
-    //   else
-    //   {
-    //     prepUrl = `${baseUrl}${item.url}`.replace(/^https?:\/\//, '');
-    //   }
-
-    //   let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
-
-    //   return await strapi.entityService.update('plugin::upload.file-delibrite-mistake', item.id, {
-    //     data: { 
-    //       url: ciUrl, 
-    //       formats: null 
-    //     },
-    //   }).catch(function(error) {
-    //     return JSON.stringify({error: error.message});
-    //   });
-    // }))
-    // .then(function(results) {
-    //   return JSON.stringify({success: true, results: results});
-    // })
-    // .catch(function(error) {
-    //   console.dir(error.message);
-
-    //   return JSON.stringify({success: false});
-    // });
-
-    await Promise.all(media.map(async (item, index) => {
+    return Promise.all(media.map((item, index) => {
       let prepUrl = '';
 
       if (/^https?:\/\//.test(item.url))
@@ -185,14 +153,35 @@ module.exports = ({ strapi }) => ({
 
       let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
 
-      let updatedFileEntry = await strapi.entityService.update('plugin::upload.file', item.id, {
+      return strapi.entityService.update('plugin::upload.file', item.id, {
         data: { 
           url: ciUrl, 
           formats: null 
         },
+      })
+      .then(function(result) {
+        return {success: true, result: result};
+      })
+      .catch(function(error) {
+        return {success: false, error: error.message};
       });
-    }));
+    }))
+    .then(function(results) {
+      let successCount = 0;
 
-    return media;
+      results.forEach((result, index) => {
+        if (result.success)
+        {
+          successCount++;
+        }
+      });
+
+      return {response: `${successCount} / ${results.length}`};
+    })
+    .catch(function(error) {
+      console.dir(error.message);
+
+      return {response: false};
+    });
   },
 });
