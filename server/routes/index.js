@@ -35,4 +35,22 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'GET',
+    path: '/count-update',
+    handler: 'scaleflexCloudimage.countUpdate',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
+  {
+    method: 'PUT',
+    path: '/update-media',
+    handler: 'scaleflexCloudimage.updateMedia',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];

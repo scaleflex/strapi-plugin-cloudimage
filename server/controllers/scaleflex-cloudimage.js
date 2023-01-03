@@ -25,4 +25,16 @@ module.exports = ({ strapi }) => ({
       .service('scaleflexCloudimage')
       .checkV7(ctx);
   },
+  async countUpdate(ctx) {
+    ctx.body = await strapi
+      .plugin('scaleflex-cloudimage')
+      .service('scaleflexCloudimage')
+      .countUpdate(ctx);
+  },
+  async updateMedia(ctx) {
+    ctx.body = await strapi
+      .plugin('scaleflex-cloudimage')
+      .service('scaleflexCloudimage')
+      .updateMedia(ctx);
+  },
 });

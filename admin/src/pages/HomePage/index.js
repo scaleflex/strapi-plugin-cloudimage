@@ -19,12 +19,24 @@ const HomePage = () => {
   const [disabledAllButtons, setDisabledAllButtons] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [disableUpdateButtons, setDisableUpdateButtons] = useState(false);
+  const [updateCount, setUpdateCount] = useState(-1);
+  const [displayUpdateResult, setDisplayUpdateResult] = useState(false);
 
   useEffect(() => {
     request(`/${pluginId}/config`, {method: 'GET'}).then(config => {
       setConfig(config);
       setDomain(config.domain);
       setLoading(false);
+
+      if (!config.domain || !config.hasOwnProperty('isV7'))
+      {
+        setDisableUpdateButtons(true);
+      }
+      else
+      {
+        setDisableUpdateButtons(false);
+      }
     });
   }, []);
 
@@ -97,17 +109,28 @@ const HomePage = () => {
     setDisabledAllButtons(false);
   }
 
+  const countUpdate = async () => {
+    setUpdateCount(-1);
+    setDisabledAllButtons(true);
+    let count = await request(`/${pluginId}/count-update`, {method: 'GET'});
+    setUpdateCount(count);
+    setDisabledAllButtons(false);
+  }
+  const updateMedia = async () => {
+    setDisplayUpdateResult(false);
+    setDisabledAllButtons(true);
+    let result = await request(`/${pluginId}/update-media`, {method: 'PUT'});
+    console.dir(result);
+    setDisplayUpdateResult(true);
+    setDisabledAllButtons(false);
+  }
+
   return (
     <>
       <Stack spacing={4} padding={3}>
-        {success && isV7CheckSuccessful && isV7 && (
-          <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'}>
-            Configuration updated. Your domain is of Cloudimage version 7.
-          </Alert>
-        )}
-        {success && isV7CheckSuccessful && !isV7 && (
-          <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'}>
-            Configuration updated. Your domain is not of Cloudimage version 7.
+        {success && isV7CheckSuccessful && (
+          <Alert title="Successful" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'}>
+            Configuration updated. Your domain is {isV7 ? '' : 'not'} of Cloudimage version 7.
           </Alert>
         )}
         {success && !isV7CheckSuccessful && (
@@ -118,6 +141,16 @@ const HomePage = () => {
         {error && (
           <Alert title="Failed" onClose={() => setError(false)} closeLabel="Close alert" variant={'danger'}>
             Please check your configuration inputs. Ensure you entered valid inputs for all required fields.
+          </Alert>
+        )}
+        {updateCount > -1 && (
+          <Alert onClose={() => setUpdateCount(-1)} closeLabel="Close alert" variant={'success'}>
+            There are {updateCount} image URLs to be updated.
+          </Alert>
+        )}
+        {displayUpdateResult && (
+          <Alert onClose={() => setDisplayUpdateResult(false)} closeLabel="Close alert" variant={'success'}>
+            {(updateCount <= 0) ? 'None are to be updated.' : 'The image URLs have been updated.'}
           </Alert>
         )}
         <Box paddingLeft={8} paddingTop={5} paddingRight={8}>
@@ -143,6 +176,10 @@ const HomePage = () => {
         <Box width={200}>
           <Button disabled={disabledAllButtons} onClick={() => saveConfiguration()}>Save configuration</Button>
         </Box>
+        <Stack horizontal spacing={4}>
+          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => countUpdate()}>Count updatable images</Button>
+          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => updateMedia()}>Update old images</Button>
+        </Stack>
       </Stack>
     </>
   )
