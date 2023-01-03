@@ -22,6 +22,7 @@ const HomePage = () => {
   const [disableUpdateButtons, setDisableUpdateButtons] = useState(false);
   const [updateCount, setUpdateCount] = useState(-1);
   const [displayUpdateResult, setDisplayUpdateResult] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState('');
 
   useEffect(() => {
     request(`/${pluginId}/config`, {method: 'GET'}).then(config => {
@@ -119,8 +120,18 @@ const HomePage = () => {
   const updateMedia = async () => {
     setDisplayUpdateResult(false);
     setDisabledAllButtons(true);
+
     let result = await request(`/${pluginId}/update-media`, {method: 'PUT'});
-    //console.dir(result);
+
+    if (result.response === false)
+    {
+      setUpdateMessage('Update was not successful. Please try again later.');
+    }
+    else
+    {
+      setUpdateMessage(`${result.response} updates was successful.`);
+    }
+    
     setDisplayUpdateResult(true);
     setDisabledAllButtons(false);
   }
@@ -150,7 +161,7 @@ const HomePage = () => {
         )}
         {displayUpdateResult && (
           <Alert onClose={() => setDisplayUpdateResult(false)} closeLabel="Close alert" variant={'success'}>
-            {(updateCount <= 0) ? 'None are to be updated.' : 'The image URLs have been updated.'}
+            {(updateCount <= 0) ? 'None are to be updated.' : updateMessage}
           </Alert>
         )}
         <Box paddingLeft={8} paddingTop={5} paddingRight={8}>
