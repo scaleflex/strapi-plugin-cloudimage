@@ -164,7 +164,7 @@ const HomePage = () => {
             {(updateCount <= 0) ? 'None are to be updated.' : updateMessage}
           </Alert>
         )}
-        <Box paddingLeft={8} paddingTop={5} paddingRight={8}>
+        <Box paddingTop={5} paddingRight={8}>
           <Typography variant={'alpha'}>Cloudimage by Scaleflex</Typography>
         </Box>
         <Field name="domain">

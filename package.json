@@ -1,6 +1,6 @@
 {
   "name": "@cloudimage-strapi/content-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "scaleflex-cloudimage",
