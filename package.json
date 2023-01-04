@@ -8,9 +8,6 @@
     "kind": "plugin",
     "displayName": "Scaleflex Cloudimage"
   },
-  "dependencies": {
-    "@strapi/design-system": "^1.4.1"
-  },
   "peerDependencies": {
     "@strapi/strapi": "^4.3.0"
   },
