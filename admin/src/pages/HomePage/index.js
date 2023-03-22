@@ -125,11 +125,11 @@ const HomePage = () => {
 
     if (result.response === false)
     {
-      setUpdateMessage('Update was not successful. Please try again later.');
+      setUpdateMessage('Image optimization was not successful. Please try again later.');
     }
     else
     {
-      setUpdateMessage(`${result.response} updates was successful.`);
+      setUpdateMessage(`${result.response} image optimizations were successful.`);
     }
     
     setDisplayUpdateResult(true);
@@ -156,12 +156,12 @@ const HomePage = () => {
         )}
         {updateCount > -1 && (
           <Alert onClose={() => setUpdateCount(-1)} closeLabel="Close alert" variant={'success'}>
-            There are {updateCount} image URLs to be updated.
+            There are {updateCount} image URLs to be optimized.
           </Alert>
         )}
         {displayUpdateResult && (
           <Alert onClose={() => setDisplayUpdateResult(false)} closeLabel="Close alert" variant={'success'}>
-            {(updateCount <= 0) ? 'None are to be updated.' : updateMessage}
+            {(updateCount <= 0) ? 'None are to be optimized.' : updateMessage}
           </Alert>
         )}
         <Box paddingTop={5} paddingRight={8}>
@@ -188,8 +188,8 @@ const HomePage = () => {
           <Button disabled={disabledAllButtons} onClick={() => saveConfiguration()}>Save configuration</Button>
         </Box>
         <Stack horizontal spacing={4}>
-          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => countUpdate()}>Count updatable images</Button>
-          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => updateMedia()}>Update old images</Button>
+          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => countUpdate()}>Count optimizable images</Button>
+          <Button disabled={disabledAllButtons || disableUpdateButtons} onClick={() => updateMedia()}>Optimize old images</Button>
         </Stack>
       </Stack>
     </>

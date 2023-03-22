@@ -42,10 +42,10 @@ In the rare case that we can’t auto-detect whether token is v7 or not, you wil
 
 ## What the plugin brings
 
-1. This plugin simple gives client an interface to save the configuration settings.
-2. It also allows clients to Cloudimage-ize all previous images:
+1. This plugin simply gives client an interface to save the configuration settings.
+2. It also allows clients to Optimize (resize and accelerate) all previous images:
 
 ![](https://user-images.githubusercontent.com/20809372/210363230-37094499-ecea-4f14-92e3-0a7217bb9a18.png)
 
-- It will NOT Cloudimage-ize images that are already hosted on Filerobot.
-- It will only sync images, no videos nor audios.
+- It will NOT Optimize (resize and accelerate) images that are already hosted on [Filerobot](https://www.scaleflex.com/dam-filerobot)
+- It will only sync images, no other media like video or audio.
