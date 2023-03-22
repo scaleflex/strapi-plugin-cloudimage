@@ -38,14 +38,14 @@ If you enter nothing or an invalid token, you will get this error.
 
 In the rare case that we can’t auto-detect whether token is v7 or not, you will get the option to manually set it.
 
-![](https://user-images.githubusercontent.com/20809372/210363178-0bb4c4b7-6fe6-4bee-8226-61fe0128c92f.png)
+![](https://user-images.githubusercontent.com/20809372/226889919-71a072b9-c648-4fd4-b0c4-e5c89351c302.png)
 
 ## What the plugin brings
 
-1. This plugin simple gives client an interface to save the configuration settings.
-2. It also allows clients to Cloudimage-ize all previous images:
+1. This plugin simply gives client an interface to save the configuration settings.
+2. It also allows clients to Optimize (resize and accelerate) all previous images:
 
-![](https://user-images.githubusercontent.com/20809372/210363230-37094499-ecea-4f14-92e3-0a7217bb9a18.png)
+![](https://user-images.githubusercontent.com/20809372/226889956-a841eb93-2eaf-4608-ad86-7a4ebcc4aff5.png)
 
-- It will NOT Cloudimage-ize images that are already hosted on Filerobot.
-- It will only sync images, no videos nor audios.
+- It will NOT Optimize (resize and accelerate) images that are already hosted on [Filerobot](https://www.scaleflex.com/dam-filerobot)
+- It will only sync images, no other media like video or audio.
