@@ -1,12 +1,12 @@
 {
   "name": "@cloudimage-strapi/content-plugin",
-  "version": "1.0.2",
-  "description": "Strapi v4 plugin for Filerobot by Scaleflex",
+  "version": "1.0.3",
+  "description": "Strapi v4 plugin for Cloudimage by Scaleflex",
   "strapi": {
-    "name": "scaleflex-cloudimage",
-    "description": "Scaleflex Cloudimage",
+    "name": "cloudimage-by-scaleflex",
+    "description": "Cloudimage by Scaleflex",
     "kind": "plugin",
-    "displayName": "Scaleflex Cloudimage"
+    "displayName": "Cloudimage by Scaleflex"
   },
   "peerDependencies": {
     "@strapi/strapi": "^4.3.0"
@@ -16,11 +16,11 @@
   },
   "maintainers": [
     {
-      "name": "Ruslan Aliyev"
+      "name": "Scaleflex"
     }
   ],
   "engines": {
-    "node": ">=12.x. <=16.x.x",
+    "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT",

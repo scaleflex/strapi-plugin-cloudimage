@@ -1,6 +1,6 @@
 'use strict';
 
-const scaleflexCloudimage = require('./scaleflex-cloudimage');
+const scaleflexCloudimage = require('./cloudimage-by-scaleflex');
 
 module.exports = {
   scaleflexCloudimage,
