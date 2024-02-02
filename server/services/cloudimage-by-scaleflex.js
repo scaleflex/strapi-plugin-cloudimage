@@ -6,7 +6,7 @@ const fetch = require("node-fetch");
 
 module.exports = ({ strapi }) => ({
   getWelcomeMessage() {
-    return 'Thank you for using Scaleflex Filerobot';
+    return 'Thank you for using Cloudimage by Scaleflex';
   },
   getPluginStore() {
     return strapi.store({
@@ -48,12 +48,12 @@ module.exports = ({ strapi }) => ({
     let response = {};
     let responseV7 = {};
 
-    try 
+    try
     {
       response = await fetch(`https://${domain}/http://sample.li/blank.png`);
       responseV7 = await fetch(`https://${domain}/v7/http://sample.li/blank.png`);
-    } 
-    catch (error) 
+    }
+    catch (error)
     {
       console.error(error);
 
@@ -139,9 +139,9 @@ module.exports = ({ strapi }) => ({
       let ciUrl = `https://${pluginConfig.domain}${pluginConfig.isV7 ? '/v7' : ''}/${prepUrl}`;
 
       return strapi.entityService.update('plugin::upload.file', item.id, {
-        data: { 
-          url: ciUrl, 
-          formats: null 
+        data: {
+          url: ciUrl,
+          formats: null
         },
       })
       .then(function(result) {
