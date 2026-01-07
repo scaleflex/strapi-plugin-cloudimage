@@ -1,4 +1,4 @@
-# Cloudimage plugin from Scaleflex for Strapi v4
+# Cloudimage plugin from Scaleflex for Strapi
 
 ## Install
 
@@ -47,5 +47,5 @@ In the rare case that we can’t auto-detect whether token is v7 or not, you wil
 
 ![](https://user-images.githubusercontent.com/20809372/226889956-a841eb93-2eaf-4608-ad86-7a4ebcc4aff5.png)
 
-- It will NOT Optimize (resize and accelerate) images that are already hosted on [Filerobot](https://www.scaleflex.com/dam-filerobot)
+- It will NOT Optimize (resize and accelerate) images that are already hosted on [Scaleflex DAM](https://www.scaleflex.com/digital-asset-management-filerobot)
 - It will only sync images, no other media like video or audio.
